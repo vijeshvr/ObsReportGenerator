@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observation Form</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Form 1: "Add new Observation" button -->
+<button onclick="showObservationForm()">Add new Observation</button>
+
+
+<!-- enctype="multipart/form-data" -->
+<!-- Form 2: Observation Form (hidden by default) -->
+<form id="observationForm" action="/obs" method="post"  style="display: none;">
+  <p><label for="input1">Enter Campaign Name:</label></p>
+  <input type="text" id="input1" name="input1"><br><br>
+  <p><label for="input2">Enter TMC Code:</label></p>
+  <input type="text" id="input2" name="input2"><br><br>
+  <p><label for="input3">Description:</label></p>
+  <input type="text" id="input3" name="input3"><br><br>
+
+  <p><label for="actualImage">Actual Result Image:</label></p>
+<input type="file" id="actualImage" name="actualImage" accept="image/*" onpaste="handlePaste(event, 'actualImage')"><br><br>
+
+<p><label for="expectedImage">Expected Result Image:</label></p>
+<input type="file" id="expectedImage" name="expectedImage" accept="image/*" onpaste="handlePaste(event, 'expectedImage')"><br><br>
+
+  <input type="checkbox" id="Check1" name="Check1">: Desktop <br><br>
+ 
+  <input type="checkbox" id="Check2" name="Check2">: Mobile<br><br>
+  <input type="submit" value="Submit Observation">
+</form>
+
+
+<!-- Form 3: EnterCode input -->
+<form action="#" method="post">
+    <label for="EnterCampaignName">Enter Campaign Name:</label><br>
+    <input type="text" id="EnterCode" name="Enter Campaign Name"><br><br>
+    <input type="submit" value="Generate Observation">
+  </form>
+
+  <!-- Form 4: EnterCode input -->
+<form action="#" method="post">
+    <label for="EnterCampaignName">Enter Campaign Name:</label><br>
+    <input type="text" id="EnterCode" name="Enter Campaign Name"><br><br>
+    <input type="submit" value="Generate Template">
+  </form>
+
+<script>
+  function showObservationForm() {
+    document.getElementById("observationForm").style.display = "block";
+  }
+  function handlePaste(event, targetId) {
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (index in items) {
+        var item = items[index];
+        if (item.kind === 'file') {
+            var blob = item.getAsFile();
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var dataURL = event.target.result;
+                var img = new Image();
+                img.src = dataURL;
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    var imgDataUrl = canvas.toDataURL('image/png');
+                    var imgInput = document.getElementById(targetId);
+                    imgInput.value = imgDataUrl;
+                };
+            };
+            reader.readAsDataURL(blob);
+        }
+    }
+}
+
+</script>
+
+</body>
+</html>
